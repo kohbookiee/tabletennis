@@ -193,7 +193,8 @@ function composeRally() {
       to,
     ];
     const span = Math.hypot(to[0] - from[0], (to[1] - from[1]) * 1.2);
-    const count = Math.round(clamp(8 + span * 16, 9, 26));
+    const narrow = window.matchMedia("(max-width: 540px)").matches;
+    const count = Math.round(clamp(8 + span * (narrow ? 8 : 16), narrow ? 6 : 9, narrow ? 12 : 26));
     built.push(rally(controls, count, rand(0.78, 1)));
     landingU = to[0];
   }
@@ -217,6 +218,12 @@ let paths = [];
 let pathWindows = [];
 let dots = [];
 let drawDots = [];
+function putOpacity(node, record, key, value) {
+  const next = value < 0.03 ? "0" : value > 0.97 ? "1" : value.toFixed(2);
+  if (record[key] === next) return;
+  record[key] = next;
+  node.setAttribute("opacity", next);
+}
 
 function mountRally(nextPaths, nextWindows) {
   dots.forEach((dot) => dot.el.remove());
@@ -234,19 +241,22 @@ function mountRally(nextPaths, nextWindows) {
       circle.setAttribute("cx", point.x.toFixed(1));
       circle.setAttribute("cy", point.y.toFixed(1));
       circle.setAttribute("r", point.r);
-      circle.dataset.lobe = String(point.lobe || 0);
-      circle.style.opacity = "0";
+      circle.setAttribute("opacity", "0");
       trail.insertBefore(circle, ball);
       const echo = circle.cloneNode();
+      echo.setAttribute("r", (point.r * drawnBallScale).toFixed(2));
       drawTrail.insertBefore(echo, drawBall);
       drawDots.push(echo);
       dots.push({
         el: circle,
+        echo,
         r: point.r,
         pathIndex,
         along: i / Math.max(1, path.length - 1),
         lobe: point.lobe || 0,
         bounceAlong,
+        opacity: "0",
+        echoOpacity: "0",
       });
     });
   });
@@ -308,6 +318,9 @@ function syncDrawnBall() {
   const px = Math.max(6, Math.min(targetPx, maxPx));
   drawnBallScale = drawnScale > 0 ? px / rawPx : 1;
   drawBall.setAttribute("r", ((DOT + 3) * drawnBallScale).toFixed(2));
+  dots.forEach((dot) => {
+    dot.echo.setAttribute("r", (dot.r * drawnBallScale).toFixed(2));
+  });
 }
 trail.append(shadow, ball);
 drawTrail.append(drawShadow, drawBall);
@@ -322,8 +335,7 @@ function placeBall(node, shade, x, y, gx, gy, lift, opacity) {
     "transform",
     `translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)})`
   );
-  node.style.opacity = String(opacity);
-  node.style.visibility = opacity > 0.02 ? "visible" : "hidden";
+  node.setAttribute("opacity", opacity < 0.03 ? "0" : opacity.toFixed(2));
 
   shade.setAttribute("cx", gx.toFixed(1));
   shade.setAttribute("cy", (gy + 4).toFixed(1));
@@ -331,8 +343,7 @@ function placeBall(node, shade, x, y, gx, gy, lift, opacity) {
   shade.setAttribute("rx", ((8 + lift * 7) * shadowScale).toFixed(2));
   shade.setAttribute("ry", ((2.7 + lift * 1.3) * shadowScale).toFixed(2));
   const shadeOpacity = opacity * (0.28 + 0.3 * (1 - lift));
-  shade.style.opacity = String(shadeOpacity);
-  shade.style.visibility = shadeOpacity > 0.02 ? "visible" : "hidden";
+  shade.setAttribute("opacity", shadeOpacity < 0.03 ? "0" : shadeOpacity.toFixed(2));
 }
 
 let trailStart = performance.now();
@@ -346,6 +357,8 @@ function paintTrail(now) {
 
   const t = (now - trailStart) / RALLY_MS;
   const fade = t < 0.88 ? 1 : 1 - (t - 0.88) / 0.12;
+  const homeOn = home.classList.contains("is-active");
+  const drawStep = homeOn ? 1 : Math.max(1, Math.round(drawnBallScale * 1.15));
 
   dots.forEach((dot, index) => {
     const [a, b] = pathWindows[dot.pathIndex];
@@ -360,13 +373,10 @@ function paintTrail(now) {
       const passed = Math.min(1, (progress - dot.bounceAlong) / 0.2);
       haze = 1 - passed * 0.72;
     }
-    const radius = dot.r;
-    dot.el.style.opacity = String(appear * fade * haze);
-    dot.el.setAttribute("r", radius);
-    const step = Math.max(1, Math.round(drawnBallScale * 1.15));
-    const showDrawn = step === 1 || index % step === 0;
-    drawDots[index].style.opacity = showDrawn ? dot.el.style.opacity : "0";
-    drawDots[index].setAttribute("r", radius * drawnBallScale);
+    const amount = appear * fade * haze;
+    if (homeOn) putOpacity(dot.el, dot, "opacity", amount);
+    else if (index % drawStep === 0) putOpacity(dot.echo, dot, "echoOpacity", amount);
+    else putOpacity(dot.echo, dot, "echoOpacity", 0);
   });
 
   let active = null;
@@ -388,10 +398,11 @@ function paintTrail(now) {
     const gx = from.gx + (to.gx - from.gx) * mix;
     const gy = from.gy + (to.gy - from.gy) * mix;
     const lift = from.lift + (to.lift - from.lift) * mix;
-    placeBall(ball, shadow, x, y, gx, gy, lift, fade);
-    placeBall(drawBall, drawShadow, x, y, gx, gy, lift, fade);
-  } else {
+    if (homeOn) placeBall(ball, shadow, x, y, gx, gy, lift, fade);
+    else placeBall(drawBall, drawShadow, x, y, gx, gy, lift, fade);
+  } else if (homeOn) {
     placeBall(ball, shadow, 0, 0, 0, 0, 0, 0);
+  } else {
     placeBall(drawBall, drawShadow, 0, 0, 0, 0, 0, 0);
   }
 

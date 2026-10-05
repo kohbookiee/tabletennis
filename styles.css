@@ -340,6 +340,10 @@ p {
 }
 
 @media (max-width: 540px) {
+  .shadow {
+    filter: none;
+  }
+
   .stage {
     align-items: flex-end;
     padding-bottom: 132px;
