@@ -351,8 +351,8 @@ p {
   }
 
   .table {
-    width: 68vw;
-    width: min(68vw, 44svh);
+    width: 81.6vw;
+    width: min(81.6vw, 52.8svh);
     height: auto;
     flex-shrink: 0;
     transform: none;
