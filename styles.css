@@ -1,0 +1,428 @@
+@font-face {
+  font-family: "ABC Gramercy Trial";
+  src: url("fonts/ABCGramercyTrial-MediumItalic.otf") format("opentype");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --blue: #0024df;
+  --gray: #c8c8c8;
+  --font: "SF Pro", "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+  color: var(--blue);
+  font-family: var(--font);
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+p {
+  font-family: inherit;
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.screen.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.table {
+  position: relative;
+  height: min(86vh, calc(86vw * 895 / 862));
+  aspect-ratio: 862 / 895;
+  transform: translate(-3.4%, -4.9%);
+}
+
+.table-img,
+.trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.logo {
+  position: absolute;
+  left: 53.7%;
+  top: 45%;
+  width: 112%;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+.trail circle {
+  fill: #fff;
+}
+
+.trail circle.ball,
+.drawn-trail circle.ball {
+  fill: url(#ball-shade);
+}
+
+.shadow {
+  fill: rgba(8, 14, 28, 0.55);
+  filter: blur(1.6px);
+}
+
+.start-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 3.4vh;
+  z-index: 2;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #000;
+  font-family: "ABC Gramercy Trial", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+#home.is-active {
+  cursor: pointer;
+}
+
+#draw {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.rest {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 704px;
+  height: min(600px, 62vh);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.4s ease;
+}
+
+.rest.is-hidden {
+  opacity: 0;
+}
+
+.credit-break {
+  display: none;
+}
+
+.credit {
+  position: absolute;
+  left: 50%;
+  bottom: 4.2vh;
+  z-index: 2;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #000;
+  font-family: "ABC Gramercy Trial", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.rest-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.rest-frame line {
+  stroke: #000;
+  stroke-width: 6;
+  vector-effect: non-scaling-stroke;
+}
+
+.paddles {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: flex-start;
+  gap: 98px;
+  transform: translate(-50%, -50%);
+}
+
+.paddles img {
+  height: 420px;
+  width: auto;
+  display: block;
+  user-select: none;
+}
+
+.portrait {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  width: min(24vw, 300px);
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.portrait.is-jp {
+  left: 0;
+}
+
+.portrait.is-us {
+  right: 0;
+}
+
+.draw-title {
+  position: absolute;
+  top: 2.2vh;
+  left: 50%;
+  z-index: 3;
+  margin: 0;
+  transform: translateX(-50%);
+  color: #000;
+  font-family: "ABC Gramercy Trial", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 60px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.preview,
+.guide,
+.drawn-table,
+.readout {
+  position: absolute;
+}
+
+.preview {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.preview polygon {
+  fill: none;
+  stroke: var(--blue);
+  stroke-width: 3;
+  stroke-linejoin: miter;
+}
+
+.preview polygon.is-forehand {
+  stroke: #df0024;
+}
+
+.drawn-table.is-forehand img {
+  filter: hue-rotate(125deg) saturate(1.25);
+}
+
+.guide {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.guide line {
+  stroke: #000;
+  stroke-width: 5;
+}
+
+.drawn-table {
+  pointer-events: none;
+}
+
+.drawn-table img,
+.drawn-trail {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+.drawn-trail circle {
+  fill: #fff;
+}
+
+.readout {
+  z-index: 2;
+  margin: 0;
+  color: #fff;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.mark {
+  position: absolute;
+  right: 28px;
+  bottom: 22px;
+  width: 186px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.mark img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: brightness(0);
+}
+
+.mark:hover {
+  opacity: 0.72;
+}
+
+.mark:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen {
+    transition: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .table {
+    width: 100vw;
+    height: auto;
+    flex-shrink: 0;
+    transform: translate(0, 34%);
+  }
+
+  .logo {
+    left: 52%;
+    top: 18%;
+    width: 164%;
+    transform: translate(-50%, -50%) rotate(88deg);
+  }
+
+  .start-hint {
+    bottom: max(2.2vh, env(safe-area-inset-bottom));
+    font-size: 30px;
+  }
+
+  .draw-title {
+    top: max(3vh, env(safe-area-inset-top));
+    font-size: 27px;
+    letter-spacing: -0.03em;
+  }
+
+  .rest {
+    width: 90vw;
+    height: 39vh;
+    top: 49%;
+  }
+
+  .rest-frame line {
+    stroke-width: 5;
+  }
+
+  .paddles {
+    gap: 22px;
+  }
+
+  .paddles img {
+    height: 22.5vh;
+  }
+
+  .credit {
+    top: 75%;
+    bottom: auto;
+    width: 78vw;
+    font-size: 14px;
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .credit-break {
+    display: inline;
+  }
+
+  .rest.is-hidden ~ .credit {
+    opacity: 0;
+  }
+
+  .portrait.is-jp,
+  .portrait.is-us {
+    width: 62vw;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  .portrait.is-jp {
+    top: auto;
+    bottom: max(2vh, env(safe-area-inset-bottom));
+  }
+
+  .portrait.is-us {
+    top: 9vh;
+    bottom: auto;
+  }
+
+  .mark {
+    right: 14px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: 78px;
+    z-index: 4;
+  }
+}

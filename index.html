@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>卓球Tennis Table</title>
+    <link rel="icon" href="img/fabi.png" type="image/png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="home" class="screen is-active">
+      <div class="stage">
+        <div class="table">
+          <img class="table-img" src="img/table.png" alt="" draggable="false" />
+          <svg class="trail" viewBox="0 0 862 895" aria-hidden="true"></svg>
+          <img class="logo" src="img/logo.png" alt="Table Tennis" draggable="false" />
+        </div>
+      </div>
+      <p class="start-hint">Touch Anywhere to Start</p>
+    </main>
+
+    <section id="draw" class="screen">
+      <p class="draw-title">Draw your own Tennis Table!</p>
+      <img class="portrait is-jp" src="img/jp.png" alt="" hidden draggable="false" />
+      <img class="portrait is-us" src="img/us.png" alt="" hidden draggable="false" />
+      <div class="rest">
+        <svg class="rest-frame" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="-6" y1="0" x2="106" y2="0" />
+          <line x1="-6" y1="100" x2="106" y2="100" />
+          <line x1="0" y1="-3" x2="0" y2="106" />
+          <line x1="100" y1="-3" x2="100" y2="106" />
+          <line x1="-6" y1="50" x2="106" y2="50" />
+        </svg>
+        <div class="paddles">
+          <img src="img/pad1.png" alt="" draggable="false" />
+          <img src="img/pad2.png" alt="" draggable="false" />
+          <img src="img/pad3.png" alt="" draggable="false" />
+        </div>
+      </div>
+      <p class="credit">Images from the Film<br class="credit-break" /> 《Marty Supreme》, 2025</p>
+      <svg class="preview" aria-hidden="true" hidden>
+        <polygon></polygon>
+      </svg>
+      <svg class="guide" aria-hidden="true" hidden>
+        <line />
+        <line />
+        <line />
+        <line />
+        <line />
+      </svg>
+      <div class="drawn-table" hidden>
+        <img src="img/table.png" alt="" draggable="false" />
+        <svg class="drawn-trail" viewBox="0 0 862 895" aria-hidden="true"></svg>
+      </div>
+      <p class="readout" hidden></p>
+      <button class="mark" type="button" aria-label="Back">
+        <img src="img/logo.png" alt="" draggable="false" />
+      </button>
+    </section>
+
+    <script src="script.js"></script>
+  </body>
+</html>
