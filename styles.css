@@ -346,11 +346,13 @@ p {
 
   .stage {
     align-items: flex-end;
-    padding-bottom: 132px;
+    box-sizing: border-box;
+    padding-bottom: 108px;
   }
 
   .table {
-    width: min(96vw, 58vh);
+    width: 68vw;
+    width: min(68vw, 44svh);
     height: auto;
     flex-shrink: 0;
     transform: none;
