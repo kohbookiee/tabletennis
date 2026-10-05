@@ -336,23 +336,8 @@ function placeBall(node, shade, x, y, gx, gy, lift, opacity) {
 }
 
 let trailStart = performance.now();
-let reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 
 function paintTrail(now) {
-  if (reducedMotion) {
-    dots.forEach((dot, index) => {
-      dot.el.setAttribute("r", dot.r);
-      dot.el.style.opacity = "1";
-      const step = Math.max(1, Math.round(drawnBallScale * 1.15));
-      drawDots[index].setAttribute("r", dot.r * drawnBallScale);
-      drawDots[index].style.opacity = step === 1 || index % step === 0 ? "1" : "0";
-    });
-    placeBall(ball, shadow, 0, 0, 0, 0, 0, 0);
-    placeBall(drawBall, drawShadow, 0, 0, 0, 0, 0, 0);
-    return;
-  }
-
   if (now - trailStart >= RALLY_MS) {
     const next = composeRally();
     mountRally(next.paths, next.windows);

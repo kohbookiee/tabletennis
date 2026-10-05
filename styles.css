@@ -340,23 +340,28 @@ p {
 }
 
 @media (max-width: 540px) {
+  .stage {
+    align-items: flex-end;
+    padding-bottom: 132px;
+  }
+
   .table {
-    width: 100vw;
+    width: min(96vw, 58vh);
     height: auto;
     flex-shrink: 0;
-    transform: translate(0, 34%);
+    transform: none;
   }
 
   .logo {
     left: 52%;
-    top: 18%;
-    width: 164%;
+    top: 12%;
+    width: 152%;
     transform: translate(-50%, -50%) rotate(88deg);
   }
 
   .start-hint {
-    bottom: max(2.2vh, env(safe-area-inset-bottom));
-    font-size: 30px;
+    bottom: max(18px, env(safe-area-inset-bottom));
+    font-size: 28px;
   }
 
   .draw-title {
